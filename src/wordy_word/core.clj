@@ -14,15 +14,13 @@
 (def approved-nouns (atom (read-lines "approved-nouns")))
 (def approved-adjectives (atom (read-lines "approved-adjectives")))
 
-; TODO: Refactor to rand-word
-(defn rand-noun [generated]
-  (if (empty? @approved-nouns)
+(defn rand-word [word-list generated]
+  (if (empty? @word-list)
     generated
-    (conj generated (rand-nth @approved-nouns))))
-(defn rand-adjective [generated]
-  (if (empty? @approved-adjectives)
-    generated
-    (conj generated (rand-nth @approved-adjectives))))
+    (conj generated (rand-nth @word-list))))
+
+(def rand-noun (partial rand-word approved-nouns))
+(def rand-adjective (partial rand-word approved-adjectives))
 
 ; TODO: Alliterations
 (def generators [[rand-noun]
