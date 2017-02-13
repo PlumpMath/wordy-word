@@ -8,7 +8,7 @@ she found appealing.
 Since the dictionary used has nearly 100K nouns and adjectives, there's an
 in-built IRC bot which enables word voting. During this process, the bot
 presents words to a channel and users can choose whether or not to discard them
-from the dictionary. The resultant dictionary is fine-tuned par the user's
+from the dictionary. The resultant dictionary is fine-tuned per the user's
 taste.
 
 ## Some of her favorites
