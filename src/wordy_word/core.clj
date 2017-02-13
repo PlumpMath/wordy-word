@@ -26,25 +26,40 @@
     :else
     (let [word (rand-nth generated)
           letter (first word)
-          possible-alliteration (filter #(= letter (first %)) @word-list)]
-      (if (empty? possible-alliteration)
+          possible (filter #(= letter (first %)) @word-list)]
+      (if (empty? possible)
         generated
-        (conj generated (rand-nth possible-alliteration))))))
+        (conj generated (rand-nth possible))))))
+
+(defn rand-cute-word [word-list generated]
+  (if (empty? @word-list)
+    generated
+    (let [cute? #(or (= \y (last %))
+                     (re-matches #".+ie" %))
+          possible (filter cute? @word-list)]
+      (if (empty? possible)
+        generated
+        (conj generated (rand-nth possible))))))
 
 (def rand-noun (partial rand-word approved-nouns))
 (def rand-adjective (partial rand-word approved-adjectives))
 (def rand-alliterative-noun (partial rand-alliterative-word approved-nouns))
 (def rand-alliterative-adjective (partial rand-alliterative-word approved-adjectives))
+(def rand-cute-noun (partial rand-cute-word approved-nouns))
+(def rand-cute-adjective (partial rand-cute-word approved-adjectives))
 
 (def generators [[rand-noun]
                  [rand-noun rand-noun]
                  [rand-noun rand-alliterative-noun]
                  [rand-adjective rand-noun]
                  [rand-adjective rand-alliterative-noun]
+                 [rand-cute-adjective rand-noun]
+                 [rand-cute-adjective rand-cute-noun]
                  [rand-adjective rand-adjective rand-noun]
                  [rand-adjective rand-alliterative-adjective rand-noun]
                  [rand-adjective rand-adjective rand-alliterative-noun]
-                 [rand-adjective rand-alliterative-adjective rand-alliterative-noun]])
+                 [rand-adjective rand-alliterative-adjective rand-alliterative-noun]
+                 ])
 
 (defn generate []
   (let [generator (rand-nth generators)
@@ -53,4 +68,4 @@
 
 (defn -main
   [& args]
-  (let []))
+  )
