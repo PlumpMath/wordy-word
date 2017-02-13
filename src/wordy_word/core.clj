@@ -31,22 +31,18 @@
         generated
         (conj generated (rand-nth possible))))))
 
-(defn rand-cute-word [word-list generated]
-  (if (empty? @word-list)
-    generated
-    (let [cute? #(or (= \y (last %))
-                     (re-matches #".+ie" %))
-          possible (filter cute? @word-list)]
-      (if (empty? possible)
-        generated
-        (conj generated (rand-nth possible))))))
+(defn cute-words [word-list]
+  (let [cute? #(or (= \y (last %))
+                   (re-matches #".+ie" %))]
+    ; Just to allow the @ later
+    (delay (filter cute? @word-list))))
 
 (def rand-noun (partial rand-word approved-nouns))
 (def rand-adjective (partial rand-word approved-adjectives))
 (def rand-alliterative-noun (partial rand-alliterative-word approved-nouns))
 (def rand-alliterative-adjective (partial rand-alliterative-word approved-adjectives))
-(def rand-cute-noun (partial rand-cute-word approved-nouns))
-(def rand-cute-adjective (partial rand-cute-word approved-adjectives))
+(def rand-cute-noun (partial rand-word (cute-words approved-nouns)))
+(def rand-cute-adjective (partial rand-word (cute-words approved-adjectives)))
 
 (def generators [[rand-noun]
                  [rand-noun rand-noun]
