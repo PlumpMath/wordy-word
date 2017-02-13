@@ -13,8 +13,12 @@ taste.
 
 ## Some of her favorites
 ```clojure
+["goofy" "granny"]
 ["husbandly" "basketball"]
+["freaky" "factory"]
 ["steely" "wedgie"]
+["stingy" "brit"]
+["moldy" "repository"]
 ```
 
 ## Some of my favorites
@@ -22,4 +26,6 @@ taste.
 ["lean" "pneumonic" "placenta"]
 ["tangelo" "tulipwood"]
 ["unblessed" "odorous" "oleoresin"]
+["unsanitary" "uniformity"]
+["dirty" "administrator"]
 ```
