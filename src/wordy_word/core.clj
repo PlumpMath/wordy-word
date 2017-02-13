@@ -43,6 +43,8 @@
 (def rand-alliterative-adjective (partial rand-alliterative-word approved-adjectives))
 (def rand-cute-noun (partial rand-word (cute-words approved-nouns)))
 (def rand-cute-adjective (partial rand-word (cute-words approved-adjectives)))
+(def rand-cute-alliterative-noun (partial rand-alliterative-word (cute-words approved-nouns)))
+(def rand-cute-alliterative-adjective (partial rand-alliterative-word (cute-words approved-adjectives)))
 
 (def generators [[rand-noun]
                  [rand-noun rand-noun]
@@ -51,6 +53,8 @@
                  [rand-adjective rand-alliterative-noun]
                  [rand-cute-adjective rand-noun]
                  [rand-cute-adjective rand-cute-noun]
+                 [rand-cute-adjective rand-alliterative-noun]
+                 [rand-cute-adjective rand-cute-alliterative-noun]
                  [rand-adjective rand-adjective rand-noun]
                  [rand-adjective rand-alliterative-adjective rand-noun]
                  [rand-adjective rand-adjective rand-alliterative-noun]
