@@ -15,6 +15,8 @@
 (defn message! [msg]
   (irc/message @connection channel msg))
 
+(def ballot (atom []))
+
 (defn vote! [args]
   (message! "ready to vote"))
 

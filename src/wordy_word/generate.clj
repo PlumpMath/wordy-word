@@ -1,18 +1,7 @@
 (ns wordy-word.generate
-  (:require [clojure.pprint :refer [pprint]]))
-
-(defn read-lines [file]
-  (try
-    (-> (clojure.java.io/resource file)
-        slurp
-        clojure.string/split-lines)
-    (catch Throwable _
-      [])))
-
-(def unapproved-nouns (atom (read-lines "unapproved-nouns")))
-(def unapproved-adjectives (atom (read-lines "unapproved-adjectives")))
-(def approved-nouns (atom (read-lines "unapproved-nouns")))
-(def approved-adjectives (atom (read-lines "unapproved-adjectives")))
+  (:require [wordy-word
+             [word-list :as words]]
+            [clojure.pprint :refer [pprint]]))
 
 (defn rand-word [word-list generated]
   (if (empty? @word-list)
@@ -37,14 +26,14 @@
     ; Just to allow the @ later
     (delay (filter cute? @word-list))))
 
-(def rand-noun (partial rand-word approved-nouns))
-(def rand-adjective (partial rand-word approved-adjectives))
-(def rand-alliterative-noun (partial rand-alliterative-word approved-nouns))
-(def rand-alliterative-adjective (partial rand-alliterative-word approved-adjectives))
-(def rand-cute-noun (partial rand-word (cute-words approved-nouns)))
-(def rand-cute-adjective (partial rand-word (cute-words approved-adjectives)))
-(def rand-cute-alliterative-noun (partial rand-alliterative-word (cute-words approved-nouns)))
-(def rand-cute-alliterative-adjective (partial rand-alliterative-word (cute-words approved-adjectives)))
+(def rand-noun (partial rand-word words/approved-nouns))
+(def rand-adjective (partial rand-word words/approved-adjectives))
+(def rand-alliterative-noun (partial rand-alliterative-word words/approved-nouns))
+(def rand-alliterative-adjective (partial rand-alliterative-word words/approved-adjectives))
+(def rand-cute-noun (partial rand-word (cute-words words/approved-nouns)))
+(def rand-cute-adjective (partial rand-word (cute-words words/approved-adjectives)))
+(def rand-cute-alliterative-noun (partial rand-alliterative-word (cute-words words/approved-nouns)))
+(def rand-cute-alliterative-adjective (partial rand-alliterative-word (cute-words words/approved-adjectives)))
 
 (def generators [[rand-noun]
                  [rand-noun rand-noun]
