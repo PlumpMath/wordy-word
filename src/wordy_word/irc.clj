@@ -1,6 +1,6 @@
 (ns wordy-word.irc
   (:require [wordy-word
-             [generate :refer [generate]]
+             [generate :refer [generate cute-words]]
              [word-list :as words]]
             [irclj.core :as irc]
             [clojure
@@ -25,21 +25,22 @@
   (take n (shuffle coll)))
 
 (defn make-ballot [kind size]
-  (let [noun? (= :noun kind)
-        word-list (if noun?
-                    words/unapproved-nouns
-                    words/unapproved-adjectives)]
-    {:approved (if noun?
-                 words/approved-nouns
-                 words/approved-adjectives)
-     :unapproved word-list
-     :words (take-rand size @word-list)}))
+  (let [m (cond
+            (= :noun kind) {:approved words/approved-nouns
+                            :unapproved words/unapproved-nouns}
+            (= :cute-noun kind) {:approved (cute-words words/approved-nouns)
+                                 :unapproved (cute-words words/unapproved-nouns)}
+            (= :adj kind) {:approved words/approved-adjectives
+                           :unapproved words/unapproved-adjectives}
+            (= :cute-adj kind) {:approved (cute-words words/approved-adjectives)
+                                :unapproved (cute-words words/unapproved-adjectives)})]
+    {:words (take-rand size @(:unapproved m))}))
 
 (defn strip-yes-no [yes-no-str]
   (apply str (filter #(or (= % \y) (= % \n)) yes-no-str)))
 
 (defn vote! [args]
-  (let [start (re-matches #"(noun|adj) (\d+)" (first args))
+  (let [start (re-matches #"(noun|cute-noun|adj|cute-adj) (\d+)" (first args))
         complete (re-matches #"[yn]+" (strip-yes-no (first args)))]
     (cond
       start (let [kind (keyword (second start))
