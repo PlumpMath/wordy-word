@@ -19,3 +19,6 @@
                                   6667 nick
                                   :callbacks {:raw-log eat-log}))
   (irc/join @connection channel))
+
+(defn message! [msg]
+  (irc/message @connection channel msg))
