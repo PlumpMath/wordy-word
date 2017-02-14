@@ -3,8 +3,9 @@
              [generate :refer [generate]]
              [word-list :as words]]
             [irclj.core :as irc]
-            [clojure.string :refer [join]]
-            [clojure.pprint :refer [pprint]]))
+            [clojure
+             [string :as string]
+             [pprint :refer [pprint]]]))
 
 (def nick "wordy-word")
 (def channel "#wordy-word")
@@ -28,9 +29,10 @@
         word-list (if noun?
                     words/unapproved-nouns
                     words/unapproved-adjectives)]
-    {:atom (if noun?
-             words/approved-nouns
-             words/approved-adjectives)
+    {:approved (if noun?
+                 words/approved-nouns
+                 words/approved-adjectives)
+     :unapproved word-list
      :words (take-rand size @word-list)}))
 
 (defn strip-yes-no [yes-no-str]
@@ -43,7 +45,7 @@
       start (let [kind (keyword (second start))
                   size (Integer/parseInt (nth start 2))]
               (reset! ballot (make-ballot kind size))
-              (message! (str "ballot: " (join ", " (:words @ballot)))))
+              (message! (str "ballot: " (string/join ", " (:words @ballot)))))
       complete (let [keywords (map (comp keyword str) complete)]
                  (if-not (= (count keywords) (count (:words @ballot)))
                    (message! "invalid vote count")
@@ -54,7 +56,7 @@
       :else (message! "invalid vote command"))))
 
 (defn gen! [args]
-  (message! (join " " (generate))))
+  (message! (string/join " " (generate))))
 
 (def commands {:vote vote!
                :gen gen!})
