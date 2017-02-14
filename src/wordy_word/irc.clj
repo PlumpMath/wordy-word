@@ -1,5 +1,7 @@
 (ns wordy-word.irc
-  (:require [irclj.core :as irc]
+  (:require [wordy-word
+             [generate :refer [generate]]]
+            [irclj.core :as irc]
             [clojure.pprint :refer [pprint]]))
 
 (def nick "wordy-word")
@@ -20,7 +22,7 @@
   (message! "stopping"))
 
 (defn gen! [args]
-  (message! (pr-str ["sugar" "nanny"])))
+  (message! (pr-str (generate))))
 
 (def commands {:vote vote!
                :stop stop!
