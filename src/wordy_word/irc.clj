@@ -18,30 +18,39 @@
   (irc/message @connection channel msg))
 
 ; TODO: vote namespace
-(def ballot (atom []))
+(def ballot (atom nil))
 
 (defn take-rand [n coll]
   (take n (shuffle coll)))
 
 (defn make-ballot [kind size]
-  (take-rand size (if (= :noun kind)
-                    @words/unapproved-nouns
-                    @words/unapproved-adjectives)))
+  (let [noun? (= :noun kind)
+        word-list (if noun?
+                    words/unapproved-nouns
+                    words/unapproved-adjectives)]
+    {:atom (if noun?
+             words/approved-nouns
+             words/approved-adjectives)
+     :words (take-rand size @word-list)}))
 
 (defn strip-yes-no [yes-no-str]
   (apply str (filter #(or (= % \y) (= % \n)) yes-no-str)))
 
 (defn vote! [args]
-  (pprint args)
-  (let [start (re-matches #"(noun|verb) (\d+)" (first args))
-        complete (re-matches #"(y|n)+" (strip-yes-no (first args)))]
+  (let [start (re-matches #"(noun|adj) (\d+)" (first args))
+        complete (re-matches #"[yn]+" (strip-yes-no (first args)))]
     (cond
       start (let [kind (keyword (second start))
                   size (Integer/parseInt (nth start 2))]
               (reset! ballot (make-ballot kind size))
-              (message! (str "ballot: " (join ", " @ballot))))
-      complete (let []
-                 )
+              (message! (str "ballot: " (join ", " (:words @ballot)))))
+      complete (let [keywords (map (comp keyword str) complete)]
+                 (if-not (= (count keywords) (count (:words @ballot)))
+                   (message! "invalid vote count")
+                   (let [pairs (map vector (:words @ballot) keywords)
+                         accepted (filter #(= :y (second %)) pairs)]
+                     (words/accept! @ballot)
+                     (message! (format "accepted %d words" (count accepted))))))
       :else (message! "invalid vote command"))))
 
 (defn gen! [args]
