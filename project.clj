@@ -3,7 +3,8 @@
   :url "https://github.com/jeaye/wordy-word"
   :license {:name "jank license"
             :url "https://upload.jeaye.com/jank-license"}
-  :dependencies [[org.clojure/clojure "1.8.0"]]
+  :dependencies [[org.clojure/clojure "1.8.0"]
+                 [irclj "0.5.0-alpha4"]]
   :main ^:skip-aot wordy-word.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})
