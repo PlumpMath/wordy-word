@@ -51,7 +51,8 @@
                    (message! "invalid vote count")
                    (let [pairs (map vector (:words @ballot) keywords)
                          accepted (filter #(= :y (second %)) pairs)]
-                     (words/accept! @ballot)
+                     (words/accept! (assoc @ballot
+                                           :words (map first accepted)))
                      (reset! ballot nil)
                      (message! (format "accepted %d words" (count accepted))))))
       :else (message! "invalid vote command"))))
