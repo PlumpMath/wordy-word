@@ -22,7 +22,7 @@
   (message! "stopping"))
 
 (defn gen! [args]
-  (message! (pr-str (generate))))
+  (message! (clojure.string/join " " (generate))))
 
 (def commands {:vote vote!
                :stop stop!
