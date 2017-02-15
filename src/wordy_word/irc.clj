@@ -1,6 +1,7 @@
 (ns wordy-word.irc
   (:require [wordy-word
              [generate :refer [generate cute-words]]
+             [vote :as vote]
              [word-list :as words]]
             [irclj.core :as irc]
             [clojure
@@ -18,48 +19,11 @@
 (defn message! [msg]
   (irc/message @connection channel msg))
 
-; TODO: vote namespace
-(def ballot (atom nil))
-
-(defn take-rand [n coll]
-  (take n (shuffle coll)))
-
-(defn make-ballot [kind size]
-  (let [m (cond
-            (= :noun kind) {:approved words/approved-nouns
-                            :unapproved words/unapproved-nouns}
-            (= :cute-noun kind) {:approved (cute-words words/approved-nouns)
-                                 :unapproved (cute-words words/unapproved-nouns)}
-            (= :adj kind) {:approved words/approved-adjectives
-                           :unapproved words/unapproved-adjectives}
-            (= :cute-adj kind) {:approved (cute-words words/approved-adjectives)
-                                :unapproved (cute-words words/unapproved-adjectives)})]
-    {:words (take-rand size @(:unapproved m))}))
-
-(defn strip-yes-no [yes-no-str]
-  (apply str (filter #(or (= % \y) (= % \n)) yes-no-str)))
-
-(defn vote! [args]
-  (let [start (re-matches #"(noun|cute-noun|adj|cute-adj) (\d+)" (first args))
-        complete (re-matches #"[yn]+" (strip-yes-no (first args)))]
-    (cond
-      start (let [kind (keyword (second start))
-                  size (Integer/parseInt (nth start 2))]
-              (reset! ballot (make-ballot kind size))
-              (message! (str "ballot: " (string/join ", " (:words @ballot)))))
-      complete (let [keywords (map (comp keyword str) complete)]
-                 (if-not (= (count keywords) (count (:words @ballot)))
-                   (message! "invalid vote count")
-                   (let [pairs (map vector (:words @ballot) keywords)
-                         accepted (filter #(= :y (second %)) pairs)]
-                     (words/accept! (assoc @ballot
-                                           :words (map first accepted)))
-                     (reset! ballot nil)
-                     (message! (format "accepted %d words" (count accepted))))))
-      :else (message! "invalid vote command"))))
-
 (defn gen! [args]
   (message! (string/join " " (generate))))
+
+(defn vote! [args]
+  (message! (vote/vote! args)))
 
 (def commands {:vote vote!
                :gen gen!})
