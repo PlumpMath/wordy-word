@@ -47,8 +47,7 @@
                  [rand-adjective rand-adjective rand-noun]
                  [rand-adjective rand-alliterative-adjective rand-noun]
                  [rand-adjective rand-adjective rand-alliterative-noun]
-                 [rand-adjective rand-alliterative-adjective rand-alliterative-noun]
-                 ])
+                 [rand-adjective rand-alliterative-adjective rand-alliterative-noun]])
 
 (defn generate []
   (let [generator (rand-nth generators)

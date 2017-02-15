@@ -12,21 +12,25 @@
     (catch Throwable _
       [])))
 
-(def unapproved-nouns (atom (read-lines "unapproved-nouns")))
-(def unapproved-adjectives (atom (read-lines "unapproved-adjectives")))
-(def approved-nouns (atom (read-lines "approved-nouns")))
-(def approved-adjectives (atom (read-lines "approved-adjectives")))
+(def unapproved-nouns-file "unapproved-nouns")
+(def unapproved-adjectives-file "unapproved-nouns")
+(def approved-nouns-file "approved-nouns")
+(def approved-adjectives-file "approved-adjectives")
+
+(def unapproved-nouns (atom (read-lines unapproved-nouns-file)))
+(def unapproved-adjectives (atom (read-lines unapproved-adjectives-file)))
+(def approved-nouns (atom (read-lines approved-nouns-file)))
+(def approved-adjectives (atom (read-lines approved-adjectives-file)))
 
 (defn save! [words file]
   (->> (string/join "\n" @words)
        (spit (clojure.java.io/resource file))))
 
-; TODO: Refactor out file names
 (defn save-all! []
-  (save! unapproved-nouns "unapproved-nouns")
-  (save! unapproved-adjectives "unapproved-adjectives")
-  (save! approved-nouns "approved-nouns")
-  (save! approved-adjectives "approved-adjectives"))
+  (save! unapproved-nouns unapproved-nouns-file)
+  (save! unapproved-adjectives unapproved-adjectives-file)
+  (save! approved-nouns approved-nouns-file)
+  (save! approved-adjectives approved-adjectives-file))
 
 (defn accept! [ballot]
   (swap! (:approved ballot) into (:words ballot))
