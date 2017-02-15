@@ -5,8 +5,7 @@
 
 (defn read-lines [file]
   (try
-    (->> (clojure.java.io/resource file)
-         slurp
+    (->> (slurp file)
          clojure.string/split-lines
          (filter not-empty))
     (catch Throwable _

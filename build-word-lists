@@ -14,6 +14,6 @@ pushd $tmp
   egrep -o $regex dict/data.adj | cut -d ' ' -f 5 > unapproved-adjectives
   egrep -o $regex dict/data.noun | cut -d ' ' -f 5 > unapproved-nouns
 
-  mv -f unapproved-adjectives unapproved-nouns "$here/resources/"
+  mv -f unapproved-adjectives unapproved-nouns "$here/"
 popd
 rm -rf $tmp
