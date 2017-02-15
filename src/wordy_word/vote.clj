@@ -21,7 +21,7 @@
                            :unapproved words/unapproved-adjectives}
             (= :cute-adj kind) {:approved (cute-words words/approved-adjectives)
                                 :unapproved (cute-words words/unapproved-adjectives)})]
-    {:words (take-rand size @(:unapproved m))}))
+    (merge m {:words (take-rand size @(:unapproved m))})))
 
 (defn strip-yes-no [yes-no-str]
   (apply str (filter #(or (= % \y) (= % \n)) yes-no-str)))
