@@ -24,7 +24,7 @@
   (let [cute? #(or (= \y (last %))
                    (re-matches #".+ie" %))]
     ; Just to allow the @ later
-    (delay (filter cute? @word-list))))
+    (atom (filter cute? @word-list))))
 
 (def rand-noun (partial rand-word words/approved-nouns))
 (def rand-adjective (partial rand-word words/approved-adjectives))
