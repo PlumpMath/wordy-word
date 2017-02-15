@@ -6,4 +6,6 @@
 
 (defn -main
   [& args]
-  )
+  (irc/connect!)
+  (loop []
+    (Thread/sleep (* 1000 60 60))))
