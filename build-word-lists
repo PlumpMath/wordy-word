@@ -2,18 +2,13 @@
 
 set -eu
 
-here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+archive=wn3.1.dict.tar.gz
 
-tmp=$(mktemp -d)
-pushd $tmp
-  archive=wn3.1.dict.tar.gz
-  wget -O $archive http://wordnetcode.princeton.edu/$archive
-  tar xvf $archive
+wget -O $archive http://wordnetcode.princeton.edu/$archive
+tar xvf $archive
 
-  regex="^[0-9]{8}\s[0-9]{2}\s[a-z]\s[0-9]{2}\s[a-zA-Z]*\s"
-  egrep -o $regex dict/data.adj | cut -d ' ' -f 5 > unapproved-adjectives
-  egrep -o $regex dict/data.noun | cut -d ' ' -f 5 > unapproved-nouns
-popd
+regex="^[0-9]{8}\s[0-9]{2}\s[a-z]\s[0-9]{2}\s[a-zA-Z]*\s"
+egrep -o $regex dict/data.adj | cut -d ' ' -f 5 > unapproved-adjectives
+egrep -o $regex dict/data.noun | cut -d ' ' -f 5 > unapproved-nouns
 
-mv -f $tmp/unapproved-{adjectives,nouns} ./
-rm -rf $tmp
+rm -rf $archive dict/
