@@ -12,16 +12,18 @@
   (take n (shuffle coll)))
 
 (defn make-ballot [kind size]
-  (let [m (cond
-            (= :noun kind) {:approved words/approved-nouns
-                            :unapproved words/unapproved-nouns}
-            (= :cute-noun kind) {:approved (cute-words words/approved-nouns)
-                                 :unapproved (cute-words words/unapproved-nouns)}
-            (= :adj kind) {:approved words/approved-adjectives
-                           :unapproved words/unapproved-adjectives}
-            (= :cute-adj kind) {:approved (cute-words words/approved-adjectives)
-                                :unapproved (cute-words words/unapproved-adjectives)})]
-    (merge m {:words (take-rand size @(:unapproved m))})))
+  (let [cute? (#{:cute-noun :cute-adj} kind)
+        modifier (if cute?
+                   cute-words
+                   identity)
+        m (cond
+            (or (= :noun kind)
+                (= :cute-noun kind)) {:approved words/approved-nouns
+                                      :unapproved words/unapproved-nouns}
+            (or (= :adj kind)
+                (= :cute-adj kind)) {:approved words/approved-adjectives
+                                     :unapproved words/unapproved-adjectives})]
+    (merge m {:words (take-rand size @(modifier (:unapproved m)))})))
 
 (defn strip-yes-no [yes-no-str]
   (apply str (filter #(or (= % \y) (= % \n)) yes-no-str)))
