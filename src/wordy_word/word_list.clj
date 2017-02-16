@@ -23,7 +23,7 @@
 
 (defn save! [words file]
   (->> (string/join "\n" @words)
-       (spit (clojure.java.io/resource file))))
+       (spit file)))
 
 (defn save-all! []
   (save! unapproved-nouns unapproved-nouns-file)
