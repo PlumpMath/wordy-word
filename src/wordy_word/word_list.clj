@@ -12,7 +12,7 @@
       [])))
 
 (def unapproved-nouns-file "unapproved-nouns")
-(def unapproved-adjectives-file "unapproved-nouns")
+(def unapproved-adjectives-file "unapproved-adjectives")
 (def approved-nouns-file "approved-nouns")
 (def approved-adjectives-file "approved-adjectives")
 
